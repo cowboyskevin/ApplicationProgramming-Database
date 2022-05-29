@@ -37,3 +37,8 @@ Integration and system testing (Proposed timeline: 2 weeks)
     First test with a single user, then expand the database
     Test every function
     Test privileges/access of each subclass
+
+Matthew Taylor Comments:
+- Under system design maybe add a little blurb about what functions would be in the base class user
+- I like how you had the proposed timeline in this method too, it's something I should consider for my own use
+- The detail you had in what to test too is nice
