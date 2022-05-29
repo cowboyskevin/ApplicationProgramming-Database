@@ -24,3 +24,7 @@
 Vik's Comments:
 System design doesn't describe anyting about building a database of users.
 We might need to allocate a little more time for the database. Not sure what operation and maintanance will entail so we could use most of those 2 weeks.
+
+Matt Taylor Comments:
+- I personally think that system design and implementing/testing should both be 5 weeks since I don't think designing the system will take that long. 
+- Doing a few users in the integration step and then installing with all users in operation is a great flow
