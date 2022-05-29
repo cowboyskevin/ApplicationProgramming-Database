@@ -21,3 +21,11 @@ Incremental Model:
     (Test) Test to see if the subclass functions oeprate and if it can use the base class functions 
 6) Create UI to combine functionality of all users (Proposed timeline: 3 weeks)
 7) Expand database (Proposed timeline: 1 week)
+
+
+Matt Taylor Comments:
+- I think that you should add "create basic inherited classes for student/instructer/admin" in step 1 if you want to create the database in step 2. 
+  Otherwise how would you develop the database with one of each user?
+- My only other critique is the timeline. I think that creating the student sublcass should be 2 weeks since it's not super intensive and that extra week
+  can be tacked on to creating the admin subclass. 
+The timeline looks good! 
