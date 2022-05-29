@@ -6,3 +6,7 @@ This data interface could be used for us to use in the project. We would just ne
 Vik's Comments:
 SQL database has a lot of attributes, so it would be easy to alter for our needs.
 Not quite sure how the Mysql interface works, but it seems like it is to create a GUI so that will be useful towards the end of the project.
+
+Matt Taylor Comments:
+- Using SQL would be fantastic, that resource looks great. 
+- Having a fully fleshed out UI would be neat too, though depending on time having a simpler UI might be best.
