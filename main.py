@@ -2,6 +2,7 @@
 import sqlite3
 from datetime import datetime
 
+#Opens up the database for use in the program.
 conn = sqlite3.connect('leopardweb.db')
 print("Opened database successfully")
 cursor = conn.cursor()
