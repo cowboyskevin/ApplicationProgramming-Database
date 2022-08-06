@@ -145,58 +145,65 @@ class student(User): #derived class
     def addCourse(self):
         print("CRN: ")
         x = input()
-        cursor.execute("""SELECT * 
-        FROM STUDENT_COURSE
-        WHERE CRN = ? and ID = ? """ ,(x,self.ID))
-        sameCourse_result = cursor.fetchall()
+        cursor.execute(""" SELECT * FROM COURSE WHERE CRN ='%s' """%(x))
+        query_result = cursor.fetchall()
+        if not query_result:
+            x = 0
+            print("You have entered the wrong info please try again")
+        else:
+            cursor.execute("""SELECT * 
+            FROM STUDENT_COURSE
+            WHERE CRN = ? and ID = ? """ ,(x,self.ID))
+            sameCourse_result = cursor.fetchall()
 
-        cursor.execute("""SELECT CRN 
-        FROM STUDENT_COURSE
-        WHERE ID = '%s' """% (self.ID))
-        crn_result = cursor.fetchall()
+            cursor.execute("""SELECT CRN 
+            FROM STUDENT_COURSE
+            WHERE ID = '%s' """% (self.ID))
+            crn_result = cursor.fetchall()
 
-        if crn_result: 
-            for i in crn_result:
-                timeConflict = False
-                checkDay = False
-                courseConflict = False
+            if crn_result: 
+                for i in crn_result:
+                    timeConflict = False
+                    checkDay = False
+                    courseConflict = False
 
-                cursor.execute("""SELECT STARTTIME, ENDTIME, MON, TUES, WED, THUR, FRI 
-                FROM COURSE
-                WHERE CRN = ? """ ,(i))
-                schedule_result = cursor.fetchall()
+                    cursor.execute("""SELECT STARTTIME, ENDTIME, MON, TUES, WED, THUR, FRI 
+                    FROM COURSE
+                    WHERE CRN = ? """ ,(i))
+                    schedule_result = cursor.fetchall()
 
-                start = datetime.strptime(schedule_result[0][0], '%I:%M%p')
-                end = datetime.strptime(schedule_result[0][1], '%I:%M%p')
+                    start = datetime.strptime(schedule_result[0][0], '%I:%M%p')
+                    end = datetime.strptime(schedule_result[0][1], '%I:%M%p')
 
-                cursor.execute("""SELECT STARTTIME, ENDTIME, MON, TUES, WED, THUR, FRI 
-                FROM COURSE
-                WHERE CRN = ? """ ,(x,))
-                check_result = cursor.fetchall()
+                    cursor.execute("""SELECT STARTTIME, ENDTIME, MON, TUES, WED, THUR, FRI 
+                    FROM COURSE
+                    WHERE CRN = ? """ ,(x,))
+                    check_result = cursor.fetchall()
 
-                startCheck = datetime.strptime(check_result[0][0], '%I:%M%p')
-                endCheck = datetime.strptime(check_result[0][1], '%I:%M%p')
-                
-                checkTime = ((startCheck >= start and startCheck <= end) or (endCheck <= end and endCheck >= start))
+                    startCheck = datetime.strptime(check_result[0][0], '%I:%M%p')
+                    endCheck = datetime.strptime(check_result[0][1], '%I:%M%p')
+                    
+                    checkTime = ((startCheck >= start and startCheck <= end) or (endCheck <= end and endCheck >= start))
 
-                if (x == i[0]):
-                    courseConflict = True
-                if ((check_result[0][2]=='YES' and schedule_result[0][2]=='YES') or (check_result[0][3]=='YES' and schedule_result[0][3]=='YES') or (check_result[0][4]=='YES' and schedule_result[0][4]=='YES') or (check_result[0][5]=='YES' and schedule_result[0][5]=='YES') or (check_result[0][6]=='YES' and schedule_result[0][6]=='YES')):
-                    checkDay = True
-                    if (checkTime and not timeConflict):
-                        timeConflict = True
+                    if (x == i[0]):
+                        courseConflict = True
+                    if ((check_result[0][2]=='YES' and schedule_result[0][2]=='YES') or (check_result[0][3]=='YES' and schedule_result[0][3]=='YES') or (check_result[0][4]=='YES' and schedule_result[0][4]=='YES') or (check_result[0][5]=='YES' and schedule_result[0][5]=='YES') or (check_result[0][6]=='YES' and schedule_result[0][6]=='YES')):
+                        checkDay = True
+                        if (checkTime and not timeConflict):
+                            timeConflict = True
 
-            if(checkDay and timeConflict):
-                if (courseConflict): 
-                    print("You have already added this course")
+                if(checkDay and timeConflict):
+                    if (courseConflict): 
+                        print("You have already added this course")
+                    else:
+                        print("Cannot Add Course: Time Conflict") 
                 else:
-                    print("Cannot Add Course: Time Conflict") 
+                    cursor.execute("""INSERT OR IGNORE INTO STUDENT_COURSE VALUES(NULL, ?, ?)""", (x, self.ID))
+                    print("\nCourse Added To Schedule")
             else:
                 cursor.execute("""INSERT OR IGNORE INTO STUDENT_COURSE VALUES(NULL, ?, ?)""", (x, self.ID))
                 print("\nCourse Added To Schedule")
-        else:
-            cursor.execute("""INSERT OR IGNORE INTO STUDENT_COURSE VALUES(NULL, ?, ?)""", (x, self.ID))
-            print("\nCourse Added To Schedule")
+        
 
     def dropCourses(self):
         print("CRN: ")
@@ -458,9 +465,9 @@ class admin(User): # derived class
     def linkStudent(self):
         x = 0
         while x == 0:
-            print("What is the student's id?")
+            print("What is the student's id")
             id = input()
-            print("What is the Course CRN?")
+            print("What is the Course CRN")
             crn = input()
             cursor.execute(""" SELECT *
             FROM STUDENT,COURSE
@@ -468,7 +475,7 @@ class admin(User): # derived class
             """ %(id,crn))
             query_result = cursor.fetchall()
             if not query_result:
-                print("The Student Id or the CRN is incorrect. Please enter the correct ID below: ")
+                print("The Student Id or the CRN is incorrect , isnt correct please enter the correct Id")
             else:
                 cursor.execute(""" INSERT OR IGNORE INTO STUDENT_COURSE VALUES (NULL,?,?)""" ,(crn,id))
                 print("You have added this student to the course")
@@ -490,7 +497,7 @@ class admin(User): # derived class
                     x = 0
                     print("You have entered the wrong info please try again")
                 else:
-                        cursor.execute(""" DELETE FROM
+                        cursor.execute(""" DELETE FRO6M
                         STUDENT_COURSE WHERE STUDENT_COURSE.ID = '%s' and STUDENT_COURSE.CRN = '%s'
                         """%(id, Crn))
                         print("You have removed this student from this course ")
@@ -680,7 +687,7 @@ while  inTheWorks == 1:
                 print("2. Search all courses")
                 print("3. Search by parameter")
                 print("4. Print schedule")
-                print("5. Log out and save database")
+                print("5. Log out")
                 choice=input()
                 if(choice == "1"):
                     i.printRoster()
@@ -712,7 +719,7 @@ while  inTheWorks == 1:
                 print("3. Search all Courses")
                 print("4. Search by parameter")
                 print("5. Print Schedule")
-                print("6. Log out and save database")
+                print("6. Log out")
                 print("Select a number: ")
                 choice = input()
 
@@ -750,7 +757,7 @@ while  inTheWorks == 1:
                 print("6. Add student to a course")
                 print("7. Add instructor to course")
                 print("8. Remove instructor from a course")
-                print("9. Log out and save database")
+                print("9. Log out")
                 choice = input()
 
                 if(choice == "1"):
